@@ -18,7 +18,7 @@ static BLEUUID UUIDS_TO_FIND[] = {
 
 static std::string MANUFACTURER_DATA[] = {
   "4c00121990fb76a061d0b35048f1b1bada2b37a15badd29ef06823037c"  // air tag
-};
+};  // useless
 
 void setup() {
   Serial.begin(9600);  
