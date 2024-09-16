@@ -13,7 +13,9 @@ const int CUTOFF = -70;
 // const std::string DEVICE_TO_FIND("51:96:d5:d8:3b:d4");  // fanbl S23 ultra advertiser
 static BLEUUID UUIDS_TO_FIND[] = {
   BLEUUID("bc157f34-328e-412e-a45d-8180ff9b401a"),  // fanbl S23 ultra advertiser simulator
-  BLEUUID("0000fffd-0000-1000-8000-00805f9b34fb")  // BLE login key
+  BLEUUID("0000fffd-0000-1000-8000-00805f9b34fb"),  // BLE login key
+  BLEUUID("0000feed-0000-1000-8000-00805f9b34fb"),  // Tile 1
+  BLEUUID("0000feed-0000-1000-8000-00805f9b34fb")   // Tile 2
 };
 
 static std::string MANUFACTURER_DATA[] = {
