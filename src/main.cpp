@@ -14,8 +14,10 @@ const int CUTOFF = -70;
 static BLEUUID UUIDS_TO_FIND[] = {
   BLEUUID("bc157f34-328e-412e-a45d-8180ff9b401a"),  // fanbl S23 ultra advertiser simulator
   BLEUUID("0000fffd-0000-1000-8000-00805f9b34fb"),  // BLE login key
-  BLEUUID("0000feed-0000-1000-8000-00805f9b34fb"),  // Tile 1
-  BLEUUID("0000feed-0000-1000-8000-00805f9b34fb")   // Tile 2
+  BLEUUID("0000ffe0-0000-1000-8000-00805f9b34fb"),  // iTag Blue
+  BLEUUID("0000ffe0-0000-1000-8000-00805f9b34fb")  // iTag Pink
+  // BLEUUID("0000feed-0000-1000-8000-00805f9b34fb"),  // Tile 1
+  // BLEUUID("0000feed-0000-1000-8000-00805f9b34fb")   // Tile 2
 };
 
 static std::string MANUFACTURER_DATA[] = {
@@ -34,6 +36,7 @@ void setup() {
 }
 
 bool isDeviceDetected(BLEAdvertisedDevice& device) {
+  // ESP_LOGI(TAG, "Signal found: %s\n", device.toString().c_str());
   if (device.getRSSI() > CUTOFF) {
     ESP_LOGI(TAG, "Nearby device found: %s\n", device.toString().c_str());
     //  Serial.printf("In loop device found %s\n", device.toString().c_str());
