@@ -3,7 +3,8 @@
 #include <BLEDevice.h>
 #include <BLEScan.h>
 #include <BLEAddress.h>
-#include "esp_log.h"
+#include <esp_log.h>
+#include "adafruit_config.h"
 
 static const char* TAG = "MyScanModule";
 const int PIN = 2;
@@ -20,35 +21,43 @@ static BLEUUID UUIDS_TO_FIND[] = {
   // BLEUUID("0000feed-0000-1000-8000-00805f9b34fb")   // Tile 2
 };
 
-static std::string MANUFACTURER_DATA[] = {
-  "4c00121990fb76a061d0b35048f1b1bada2b37a15badd29ef06823037c"  // air tag
-};  // useless
+// set up the 'counter' feed
+AdafruitIO_Feed *feed = io.feed("bledetector");
 
 void setup() {
   Serial.begin(9600);  
-  while (!Serial) {
-    ;
-  }
+  while (!Serial);
+
   Serial.println("Hello Arduino!");
   pinMode(PIN, OUTPUT);
   BLEDevice::init("");  
   ESP_LOGI(TAG, "start testing");
+
+  ESP_LOGI(TAG, "Connecting to Adafruit IO");
+
+  // connect to io.adafruit.com
+  io.connect();
+
+  // wait for a connection
+  while(io.status() < AIO_CONNECTED) {    
+    Serial.print(".");
+    delay(500);
+  }
+
+  // we are connected
+  ESP_LOGI(TAG, "Connected: %s", io.statusText());
 }
 
 bool isDeviceDetected(BLEAdvertisedDevice& device) {
   // ESP_LOGI(TAG, "Signal found: %s\n", device.toString().c_str());
   if (device.getRSSI() > CUTOFF) {
     ESP_LOGI(TAG, "Nearby device found: %s\n", device.toString().c_str());
-    //  Serial.printf("In loop device found %s\n", device.toString().c_str());
     for (BLEUUID& uuid : UUIDS_TO_FIND) {
       if (device.isAdvertisingService(uuid)) {
         ESP_LOGW(TAG, "Detected Device by UUID: %s\n", device.toString().c_str());
-        return true;
-      }
-    }
-    for (const std::string& manufactorer_data : MANUFACTURER_DATA) {
-      if (device.getManufacturerData() == manufactorer_data) {
-        ESP_LOGW(TAG, "Detected Device by manufactorer data: %s\n", device.toString().c_str());
+
+        ESP_LOGI(TAG, "Adafruit sending : %s\n", device.toString().c_str());         
+        feed->save(device.toString().c_str());
         return true;
       }
     }
@@ -57,6 +66,8 @@ bool isDeviceDetected(BLEAdvertisedDevice& device) {
 }
 
 void loop() {
+  io.run();
+
   BLEScan *scan = BLEDevice::getScan();
   scan->setActiveScan(true);
   BLEScanResults results = scan->start(1);
@@ -68,6 +79,7 @@ void loop() {
       break;
     }
   }
-  // digitalWrite(PIN, best > CUTOFF ? HIGH : LOW);
+
   digitalWrite(PIN, found ? HIGH : LOW);
+  delay(1000);  // wait 1s each loop
 }
