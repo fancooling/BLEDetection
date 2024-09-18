@@ -4,7 +4,6 @@
 #include <BLEScan.h>
 #include <BLEAddress.h>
 #include <esp_log.h>
-#include "adafruit_config.h"
 
 static const char* TAG = "MyScanModule";
 const int PIN = 2;
