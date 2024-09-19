@@ -20,9 +20,6 @@ static BLEUUID UUIDS_TO_FIND[] = {
   // BLEUUID("0000feed-0000-1000-8000-00805f9b34fb")   // Tile 2
 };
 
-// set up the 'counter' feed
-AdafruitIO_Feed *feed = io.feed("bledetector");
-
 void setup() {
   Serial.begin(9600);  
   while (!Serial);
@@ -32,19 +29,6 @@ void setup() {
   BLEDevice::init("");  
   ESP_LOGI(TAG, "start testing");
 
-  ESP_LOGI(TAG, "Connecting to Adafruit IO");
-
-  // connect to io.adafruit.com
-  io.connect();
-
-  // wait for a connection
-  while(io.status() < AIO_CONNECTED) {    
-    Serial.print(".");
-    delay(500);
-  }
-
-  // we are connected
-  ESP_LOGI(TAG, "Connected: %s", io.statusText());
 }
 
 bool isDeviceDetected(BLEAdvertisedDevice& device) {
@@ -65,8 +49,6 @@ bool isDeviceDetected(BLEAdvertisedDevice& device) {
 }
 
 void loop() {
-  io.run();
-
   BLEScan *scan = BLEDevice::getScan();
   scan->setActiveScan(true);
   BLEScanResults results = scan->start(1);
