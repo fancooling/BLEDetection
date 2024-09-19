@@ -34,13 +34,10 @@ void setup() {
 bool isDeviceDetected(BLEAdvertisedDevice& device) {
   // ESP_LOGI(TAG, "Signal found: %s\n", device.toString().c_str());
   if (device.getRSSI() > CUTOFF) {
-    ESP_LOGI(TAG, "Nearby device found: %s\n", device.toString().c_str());
+    ESP_LOGD(TAG, "Nearby device found: %s\n", device.toString().c_str());
     for (BLEUUID& uuid : UUIDS_TO_FIND) {
       if (device.isAdvertisingService(uuid)) {
-        ESP_LOGW(TAG, "Detected Device by UUID: %s\n", device.toString().c_str());
-
-        ESP_LOGI(TAG, "Adafruit sending : %s\n", device.toString().c_str());         
-        feed->save(device.toString().c_str());
+        ESP_LOGI(TAG, "Detected Device by UUID: %s\n", device.toString().c_str());        
         return true;
       }
     }
